@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, FlatList, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, SafeAreaView, FlatList, Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useState } from 'react';
 
 
@@ -7,15 +7,27 @@ import { useState } from 'react';
 
 export default function App() {
   const [temp, setTemp] = useState("")
-  const [idForbuttons, setIdForButtons]= useState(0);
+  const [idForbuttons, setIdForButtons]= useState(2);
+
   const [rigger, setRigger] = useState([
-    {todo: "test thing" },
-    {todo: "siggggggg" }]);
+    {todo: "test thing" , key: 0},
+    {todo: "siggggggg" ,key: 1}]);
+
+
+    const dell = (r) =>{
+      //r is object
+      let arr = rigger.filter((fump) => {
+        return fump.key !== r.key;
+      }); // arr is obv an array
+      setRigger(arr);
+    }
+
 
   return (
     <SafeAreaView style={styles.container}>
       
       <View style={styles.toop}>
+        <Text style={styles.pumpkin}>pumpkin</Text>
         <Text style={styles.title}> My TODOODLE </Text>
       </View>
       <View style= {styles.miid}>
@@ -27,9 +39,10 @@ export default function App() {
         <Button  color="black" title='addToDo' onPress={() => {
           //console.log('thisis wrong fr')
           if (temp !=""){
-            console.log("current: " + idForbuttons + ", next should be: " + "im too lazy for this");
-            setIdForButtons(idForbuttons +1);
-            setRigger([...rigger, {id: idForbuttons, todo: temp }]);
+            //console.log("current: " + idForbuttons + ", next should be: " + "im too lazy for this");
+            //setIdForButtons(idForbuttons +1);
+            setRigger([...rigger, { todo: temp, key : idForbuttons }]);
+            setIdForButtons(idForbuttons +1)
           }
         }}></Button>
         </View>
@@ -37,11 +50,14 @@ export default function App() {
       <View style={styles.boot}>
         <FlatList data={rigger}
           renderItem={(itemData) => {
-            return <View style={styles.buttonlist}><Button style={styles.simp} color='white' title={itemData.item.todo} onPress={() => {
-              //delete itself somehow
-              //setRigger([...rigger])
-              
-            }}></Button></View>
+            return <View style={styles.buttonlist}>
+              <Pressable onPress={() => {
+                dell(itemData.item);
+
+              }}>
+                <Text style={styles.simp}  >{itemData.item.todo}</Text>
+              </Pressable>
+            </View>
           }
           }></FlatList>
       </View>
@@ -81,7 +97,7 @@ const styles = StyleSheet.create({
   },
   miid: {
     marginTop: 5,
-    backgroundColor: 'grey',
+    //backgroundColor: 'grey',
     
 
   },
@@ -115,6 +131,13 @@ const styles = StyleSheet.create({
   simp:{
     color: 'black',
 
+  },
+  pumpkin:{
+    backgroundColor:'green',
+    borderBlockColor:'black',
+    borderWidth:2,
+    maxWidth:60,
+    //justifyContent: 'center'
   }
 
 });
